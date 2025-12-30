@@ -1,12 +1,11 @@
-package com.app.auth.service;
+package com.app.auth.auth_service.service;
 
-import com.app.auth.config.SecurityConfig;
-import com.app.auth.dto.AuthResponse;
-import com.app.auth.dto.LoginRequest;
-import com.app.auth.dto.RegisterRequest;
-import com.app.auth.model.User;
-import com.app.auth.repository.UserRepository;
-import com.app.auth.security.JwtUtil;
+import com.app.auth.auth_service.dto.AuthResponse;
+import com.app.auth.auth_service.dto.LoginRequest;
+import com.app.auth.auth_service.dto.RegisterRequest;
+import com.app.auth.auth_service.model.User;
+import com.app.auth.auth_service.repository.UserRepository;
+import com.app.auth.auth_service.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;

@@ -1,4 +1,4 @@
-package com.app.auth.security;
+package com.app.auth.auth_service.security;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;

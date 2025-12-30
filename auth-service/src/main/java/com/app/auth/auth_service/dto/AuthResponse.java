@@ -1,4 +1,4 @@
-package com.app.auth.dto;
+package com.app.auth.auth_service.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

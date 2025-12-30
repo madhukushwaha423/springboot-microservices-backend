@@ -1,4 +1,4 @@
-package com.app.auth.dto;
+package com.app.auth.auth_service.dto;
 
 import jakarta.validation.constraints.Email;
 import lombok.Getter;
