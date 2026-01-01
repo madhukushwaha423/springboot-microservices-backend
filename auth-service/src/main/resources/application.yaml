@@ -14,6 +14,6 @@ server :
   port: 8081
 
 jwt:
-  secret: my-super-secret-key
-  access-token-expiration: 900000      # 15 mins
-  refresh-token-expiration: 604800000  # 7 days
+  secret: VGVzdC1Kd3QtU2VjcmV0LUtleS1Gb3ItQXV0aC1TZXJ2aWNlLTEyMzQ1Njc4
+  access-token-expiration: 900000
+  refresh-token-expiration: 604800000
