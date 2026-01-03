@@ -13,9 +13,20 @@ public class JwtUtil {
     @Value("${jwt.secret}")
     private String jwtSecret;
 
-    public String generateToken(String email, Long expiration) {
+    public String generateAccessToken(String email, Long expiration) {
         return Jwts.builder()
                 .setSubject(email)
+                .claim("type", "ACCESS" )
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(Keys.hmacShaKeyFor(jwtSecret.getBytes()))
+                .compact();
+    }
+
+    public String generateRefreshToken(String email, Long expiration) {
+        return Jwts.builder()
+                .setSubject(email)
+                .claim("type", "REFRESH" )
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(Keys.hmacShaKeyFor(jwtSecret.getBytes()))

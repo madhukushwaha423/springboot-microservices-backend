@@ -6,9 +6,11 @@ import com.app.auth.auth_service.dto.RegisterRequest;
 import com.app.auth.auth_service.exception.UserAlreadyExistsException;
 import com.app.auth.auth_service.exception.UserNotFoundException;
 import com.app.auth.auth_service.model.User;
+import com.app.auth.auth_service.repository.RefreshTokenRepository;
 import com.app.auth.auth_service.repository.UserRepository;
 import com.app.auth.auth_service.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,8 +19,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthService {
 
+    @Autowired
     private final UserRepository userRepository;
+
+    @Autowired
+    private final RefreshTokenService refreshTokenService;
     private final PasswordEncoder passwordEncoder;
+
+    @Autowired
     private final JwtUtil jwtUtil;
 
     @Value("${jwt.access-token-expiration}")
@@ -41,14 +49,16 @@ public class AuthService {
 
         userRepository.save(user);
 
-        return generateToken(user.getEmail());
+        AuthResponse response = generateToken(user.getEmail());
+        refreshTokenService.createRefreshToken(user.getId(), response.getRefreshToken());
+
+        return response;
 
     }
 
     public AuthResponse login(LoginRequest loginRequest) {
-        User user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new RuntimeException("User not found!"));
 
-        User user1 = userRepository.findByEmail(loginRequest.getEmail())
+        User user = userRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() ->
                         new UserNotFoundException("User not found with email: " + loginRequest.getEmail())
                 );
@@ -57,13 +67,17 @@ public class AuthService {
             throw new RuntimeException("Invalid Credentials!");
         }
 
-        return generateToken(user.getEmail());
+        AuthResponse response = generateToken(user.getEmail());
+        refreshTokenService.createRefreshToken(user.getId(), response.getRefreshToken());
+
+        return response;
     }
 
     private AuthResponse generateToken(String email) {
+
         return new AuthResponse(
-                jwtUtil.generateToken(email, accessExp),
-                jwtUtil.generateToken(email, refreshExp)
+                jwtUtil.generateAccessToken(email, accessExp),
+                jwtUtil.generateRefreshToken(email, refreshExp)
         );
     }
 
